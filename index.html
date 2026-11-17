@@ -477,15 +477,15 @@
   function gxBack(){var g=document.getElementById('gx');if(g){g.hidden=false;g.scrollTop=0;}document.body.classList.add('gxon');}
   document.body.classList.add('gxon');
   /* 16.11: שדה הקוד בתוך מסך הפתיחה (כניסה כללית). קישור של קבוצה ממשיך למסך הקוד של הקבוצה, עם המיתוג שלה */
-  (function(){var t='';try{t=((new URLSearchParams(location.search)).get('t')||'').toLowerCase();}catch(e){}if(t&&t!=='wu15')return;
+  (function(){
     var gx=document.getElementById('gx'),go=gx&&gx.querySelector('.gx-go');if(!go)return;gx.classList.add('gx-inl');
     var st=document.createElement('style');st.textContent='#gx.gx-inl .gx-in>.gx-lg{font-size:49px!important}#gx.gx-inl .gx-in>.gx-lg svg{width:84px;height:84px}'+
       '.gx-f{width:100%;max-width:300px;margin:6px auto 0;display:flex;flex-direction:column;gap:10px;background:none!important;border:0!important;box-shadow:none!important;padding:0!important;backdrop-filter:none!important}.gx-f input{height:46px;border:1px solid rgba(143,165,255,.45);border-radius:14px;padding:0 14px;font:600 16px Heebo,sans-serif;text-align:center;background:rgba(255,255,255,.08);color:#fff;outline:none;-webkit-appearance:none}'+
       '.gx-f input::placeholder{color:#b9c6ea}.gx-f input:focus{border-color:#2ad4c4;background:rgba(255,255,255,.12)}.gx-f button{height:46px;border:0;border-radius:14px;font:800 15px Heebo,sans-serif;color:#0b1530;background:linear-gradient(90deg,#2ad4c4,#8fa5ff);box-shadow:0 0 18px rgba(42,212,196,.35);cursor:pointer}.gx-f small{font-size:12px;color:#8e9cc6;text-align:center}';
     document.head.appendChild(st);
-    var f=document.createElement('div');f.className='gx-f';f.innerHTML='<input id="gxCode" inputmode="numeric" maxlength="12" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="הקוד האישי שלך" aria-label="קוד אישי"><button type="button" id="gxEnter">כניסה ←</button><small>הקוד אישי — לא להעביר לאחרים</small>';
+    var f=document.createElement('div');f.className='gx-f';f.innerHTML='<input id="gxCode" inputmode="numeric" maxlength="12" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="הקוד האישי שלך" aria-label="קוד אישי"><button type="button" id="gxEnter">כניסה ←</button><small id="gxMsg" style="color:#ffd27a;font-weight:700" hidden></small><small>הקוד אישי — לא להעביר לאחרים</small>';
     go.replaceWith(f);
-    function send(){var v=document.getElementById('gxCode').value,c=document.getElementById('code');if(!c)return;c.value=v;gxGo();if(typeof enterCode==='function')enterCode();}
+    function send(){var v=document.getElementById('gxCode').value,c=document.getElementById('code');if(!c)return;c.value=v;if(typeof enterCode==='function')enterCode();}
     document.getElementById('gxEnter').addEventListener('click',send);document.getElementById('gxCode').addEventListener('keydown',function(e){if(e.key==='Enter')send();});})();
 </script>
 <div class="gx-bar"><button type="button" onclick="gxBack()">→ חזרה</button><span class="gx-lg" style="font-size:23.5px">G<svg width="42" height="42" style="margin:0 -5px 0 -5px" aria-hidden="true"><use href="#gxball"/></svg>al<i>axy</i></span></div>
@@ -605,9 +605,11 @@
   }
   function pickDay(k){calSel=k;renderCal();}
   function enterCode(){
-    var c=document.getElementById('code').value.replace(/[\u0660-\u0669]/g,function(d){return d.charCodeAt(0)-1632;}).replace(/[\u06F0-\u06F9]/g,function(d){return d.charCodeAt(0)-1776;}).replace(/\D/g,''); function go(m){MINE=m;window.WU_CODE=c;try{if(window.WU&&WU.on())WU.call('wu_visit',{p_page:'home'}).catch(function(){});}catch(e){}if(window.WU)WU.call('wu_extra').then(function(x){var n=window.NEXT_TRAIN,t=n&&x.trainings&&x.trainings[n[0]];if(!t)return;if(t.loc)document.querySelectorAll('[data-nx=loc]').forEach(function(e){e.textContent=t.loc;});if(t.topic)document.querySelectorAll('[data-nx=topic]').forEach(function(e){e.textContent=t.topic;});}).catch(function(){});document.getElementById('codeErr').hidden=true;document.getElementById('gate').hidden=true;document.getElementById('app').hidden=false;renderCal();if(MINE[2]==='club'||MINE[2]==='scout'){document.querySelector('.sub-bar button').hidden=true;}openMine();}
-    var er=document.getElementById('codeErr');
-    if(!c||!window.WU){er.hidden=false;return;}
+    var c=document.getElementById('code').value.replace(/[\u0660-\u0669]/g,function(d){return d.charCodeAt(0)-1632;}).replace(/[\u06F0-\u06F9]/g,function(d){return d.charCodeAt(0)-1776;}).replace(/\D/g,''); function go(m){MINE=m;window.WU_CODE=c;try{if(window.WU&&WU.on())WU.call('wu_visit',{p_page:'home'}).catch(function(){});}catch(e){}if(window.WU)WU.call('wu_extra').then(function(x){var n=window.NEXT_TRAIN,t=n&&x.trainings&&x.trainings[n[0]];if(!t)return;if(t.loc)document.querySelectorAll('[data-nx=loc]').forEach(function(e){e.textContent=t.loc;});if(t.topic)document.querySelectorAll('[data-nx=topic]').forEach(function(e){e.textContent=t.topic;});}).catch(function(){});document.getElementById('codeErr').hidden=true;var gm2=document.getElementById('gxMsg');if(gm2)gm2.hidden=true;if(document.body.classList.contains('gxon'))gxGo();document.getElementById('gate').hidden=true;document.getElementById('app').hidden=false;renderCal();if(MINE[2]==='club'||MINE[2]==='scout'){document.querySelector('.sub-bar button').hidden=true;}openMine();}
+    var er0=document.getElementById('codeErr'),gm=document.getElementById('gxMsg');
+    /* 17.11: בכניסה ממסך הפתיחה — ההודעות שם, והמסך נסגר רק כשהקוד נכון (בלי לעבור דרך מסך הקוד) */
+    var er={set textContent(t){er0.textContent=t;if(gm)gm.textContent=t;},set hidden(h){er0.hidden=h;if(gm)gm.hidden=h;}};
+    if(!c||!window.WU){er.textContent='הקוד לא נכון — נסי שוב.';er.hidden=false;return;}
     window.WU_CODE=c;er.textContent='בודקת…';er.hidden=false;
     WU.call('wu_whoami').then(function(w){er.textContent='הקוד לא נכון — נסי שוב.';
       if(w.kind==='player')go([w.name==='אליה מימרן'?'player.html':w.name==='שחקנית פיילוט 1'?'pilot1.html':w.name==='שחקנית פיילוט 2'?'pilot2.html':'player-gen.html','הדף שלי']);
@@ -630,7 +632,7 @@
   var MINE=['player.html','הדף שלי'];
   function openMine(){openSub(MINE[0],MINE[1]);}
   window.subPatch=function(url,t){if(url==='staff.html'&&MINE[2])return t.replace("show('head');\n<\/script>","show('"+MINE[2]+"');document.getElementById('roles').hidden=true;document.querySelector('.demo-note').hidden=true;\n<\/script>");return t;};
-  function closeSub(){try{localStorage.removeItem('wu_code');}catch(e){}document.getElementById('sub').hidden=true;document.getElementById('subFrame').srcdoc='';document.getElementById('app').hidden=true;document.getElementById('gate').hidden=false;window.WU_CODE=null;var ci=document.getElementById('code');if(ci)ci.value='';}
+  function closeSub(){try{localStorage.removeItem('wu_code');}catch(e){}document.getElementById('sub').hidden=true;document.getElementById('subFrame').srcdoc='';document.getElementById('app').hidden=true;document.getElementById('gate').hidden=false;window.WU_CODE=null;var ci=document.getElementById('code');if(ci)ci.value='';var gc=document.getElementById('gxCode');if(gc){gc.value='';gxBack();}}
 </script>
 <script>
 (function(){
@@ -999,7 +1001,16 @@ window.WU_PAGE=function(url){
       if(tg)tg.textContent=B.tag||(b.name?(KS[b.kind]||'Goalaxy'):'השחקנית במרכז – כל הצוות סביבה');if(h1)h1.textContent=b.name||'כל מה ששחקנית / קבוצה / מועדון צריכים במקום אחד';
       var sb=h.querySelector('.gx-sub2');if(b.name){if(!sb&&h1){sb=document.createElement('div');sb.className='gx-sub2';sb.style.cssText='font-size:12.5px;opacity:.85;margin-top:2px';h1.after(sb);}if(sb)sb.textContent='השחקנית במרכז – כל הצוות סביבה';}else if(sb)sb.remove();
       logoEl(h.querySelector('.logo-img'),B.logo||null);}
-    document.title=(b.name?b.name+' · ':'')+'Goalaxy';}
+    document.title=(b.name?b.name+' · ':'')+'Goalaxy';gxTeam(b);}
+  /* 17.11: קישור של קבוצה/מועדון → אותו מסך פתיחה עם הקוד, בצבעי הקבוצה + "כניסה — שם הקבוצה" */
+  function gxTeam(b){var gx=document.getElementById('gx');if(!gx||!b||!b.name)return;var B=b.brand||{},c=B.colors,ok=c&&c.length===2&&/^#[0-9a-f]{6}$/i.test(c[0])&&/^#[0-9a-f]{6}$/i.test(c[1]);
+    function mix(h,k,to){var n=parseInt(h.slice(1),16),r=n>>16,g=(n>>8)&255,bb=n&255;function m(x){return Math.round(x+((to||0)-x)*k);}return 'rgb('+m(r)+','+m(g)+','+m(bb)+')';}
+    var s=document.getElementById('gxTeamCol');if(!s){s=document.createElement('style');s.id='gxTeamCol';document.head.appendChild(s);}
+    s.textContent=ok?('#gx{background:radial-gradient(120% 60% at 50% 0%,'+mix(c[0],.1,255)+' 0%,'+mix(c[0],.55)+' 55%,'+mix(c[0],.8)+' 100%)!important}'+
+      '.gx-f button{background:linear-gradient(90deg,'+c[1]+','+mix(c[1],.35,255)+')!important;box-shadow:0 0 18px '+mix(c[1],0,0).replace('rgb','rgba').replace(')',',.35)')+'!important}'+
+      '.gx-f input{border-color:'+mix(c[1],.3,255).replace('rgb','rgba').replace(')',',.6)')+'!important}.gx-f input:focus{border-color:'+c[1]+'!important}'):'';
+    var bt=document.getElementById('gxEnter');if(bt)bt.textContent='כניסה — '+b.name+' ←';}
+
   /* מסך הכניסה */
   if(t!=='wu15'&&(t||gen)){apply(null);if(t)brand(t).then(function(b){if(b&&b.id)apply(b);}).catch(function(){});}
   /* קבוצה שאינה הנבחרת → דף צוות בלי נתוני הנבחרת */
