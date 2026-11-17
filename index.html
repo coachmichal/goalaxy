@@ -954,10 +954,8 @@ window.WU_PAGE=function(url){
   requestAnimationFrame(sky);
   gx.addEventListener('pointermove',function(e){if(e.pointerType==='mouse'){tx=(e.clientX/innerWidth-.5)*2;ty=(e.clientY/innerHeight-.5)*2;}});
   function ori(e){if(e.gamma==null)return;tx=Math.max(-1,Math.min(1,e.gamma/25));ty=Math.max(-1,Math.min(1,(e.beta-40)/25));}
-  if(window.DeviceOrientationEvent&&typeof DeviceOrientationEvent.requestPermission==='function'){
-    var asked=false;gx.addEventListener('click',function(e){if(asked||(e.target.closest&&e.target.closest('.gx-go')))return;asked=true;
-      DeviceOrientationEvent.requestPermission().then(function(p){if(p==='granted')addEventListener('deviceorientation',ori);}).catch(function(){});});
-  }else addEventListener('deviceorientation',ori);
+  /* 17.11: בלי בקשת הרשאת "תנועה וכיוון" באייפון (קפצה בכל פתיחה) — ההטיה פועלת רק איפה שלא צריך הרשאה */
+  if(!(window.DeviceOrientationEvent&&typeof DeviceOrientationEvent.requestPermission==='function'))addEventListener('deviceorientation',ori);
   /* 2 · פתיחה — פעם אחת בכל כניסה לאתר */
   var seen=false;try{seen=sessionStorage.getItem('gx_intro')==='1';sessionStorage.setItem('gx_intro','1');}catch(e){}
   var PRE=document.getElementById('gxPre');
