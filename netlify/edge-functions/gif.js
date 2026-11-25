@@ -12,7 +12,7 @@ export default async (request) => {
   if (!q) return J({ ids: [] });
   const ref = request.headers.get("referer") || "";
   try { if (ref && new URL(ref).host !== url.host) return J({ error: "not allowed" }); } catch (e) { return J({ error: "not allowed" }); }
-  const key = Netlify.env.get("GIPHY_KEY");
+  const key = (Netlify.env.get("GIPHY_KEY") || "").replace(/\s+/g, "");
   if (!key) return J({ error: "no key" });
   const he = /[֐-׿]/.test(q);
   const api = "https://api.giphy.com/v1/gifs/search?api_key=" + encodeURIComponent(key) + "&q=" + encodeURIComponent(q) +
@@ -20,7 +20,7 @@ export default async (request) => {
   let r;
   try { r = await fetch(api); } catch (e) { return J({ error: "net" }); }
   if (r.status === 429) return J({ limit: true });
-  if (!r.ok) return J({ error: "giphy " + r.status });
+  if (!r.ok) return J({ error: "giphy " + r.status, len: key.length });
   const x = await r.json();
   const ids = (x.data || []).map((g) => g.id).filter((id) => /^[A-Za-z0-9]{4,40}$/.test(id));
   return J({ ids }, true);
