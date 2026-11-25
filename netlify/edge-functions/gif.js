@@ -20,7 +20,7 @@ export default async (request) => {
   let r;
   try { r = await fetch(api); } catch (e) { return J({ error: "net" }); }
   if (r.status === 429) return J({ limit: true });
-  if (!r.ok) return J({ error: "giphy " + r.status, len: key.length });
+  if (!r.ok) return J({ error: "giphy " + r.status });
   const x = await r.json();
   const ids = (x.data || []).map((g) => g.id).filter((id) => /^[A-Za-z0-9]{4,40}$/.test(id));
   return J({ ids }, true);
