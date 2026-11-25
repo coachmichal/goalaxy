@@ -1,9 +1,8 @@
 // 25.11 — חיפוש גיפים לשיחות הצוות. המפתח של GIPHY נשמר ב-Netlify (GIPHY_KEY), לא בקוד.
 // מחזיר רק מזהים של גיפים בדירוג "מתאים לכולם". כשנגמרת המכסה השעתית — { limit: true }.
-const J = (o, cache) => new Response(JSON.stringify(o), { headers: {
+const J = (o) => new Response(JSON.stringify(o), { headers: {
   "content-type": "application/json; charset=utf-8",
   "cache-control": "no-store",
-  ...(cache ? { "netlify-cdn-cache-control": "public, s-maxage=3600" } : {}),
 } });
 
 export default async (request) => {
@@ -23,7 +22,7 @@ export default async (request) => {
   if (!r.ok) return J({ error: "giphy " + r.status });
   const x = await r.json();
   const ids = (x.data || []).map((g) => g.id).filter((id) => /^[A-Za-z0-9]{4,40}$/.test(id));
-  return J({ ids }, true);
+  return J({ ids });
 };
 
-export const config = { path: "/api/gif", cache: "manual" };
+export const config = { path: "/api/gif" };
